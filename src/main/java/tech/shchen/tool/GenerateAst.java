@@ -33,13 +33,31 @@ public class GenerateAst {
         printWriter.println();
         printWriter.println("abstract class " + baseName + " {");
 
+        defineVisitor(printWriter, baseName, types);
+
         types.forEach(type -> {
             String className = type.split(":")[0].trim();
             String fields = type.split(":")[1].trim();
             defineType(printWriter, baseName, className, fields);
         });
+
+        // the base accept() method
+        printWriter.println();
+        printWriter.println("    abstract <R> R accept(Visitor<R> visitor);");
+
         printWriter.println("}");
         printWriter.close();
+    }
+
+    private static void defineVisitor(PrintWriter writer, String baseName, List<String> types) {
+        writer.println("    interface Visitor<R> {");
+
+        types.forEach(type -> {
+            String typeName = type.split(":")[0].trim();
+            writer.println("        R visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ");");
+        });
+
+        writer.println("    }");
     }
 
     private static void defineType(PrintWriter writer, String baseName, String className, String fieldList) {
@@ -55,6 +73,13 @@ public class GenerateAst {
             writer.println("            this." + name + " = " + name + ";");
         });
 
+        writer.println("        }");
+
+        // visitor pattern
+        writer.println();
+        writer.println("        @Override");
+        writer.println("        <R> R accept(Visitor<R> visitor) {");
+        writer.println("            return visitor.visit" + className + baseName + "(this);");
         writer.println("        }");
 
         // fields
