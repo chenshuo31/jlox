@@ -28,7 +28,7 @@ public class Lox {
         run(new String(bytes, Charset.defaultCharset()));
 
         if (hadError) {
-            System.exit(64);
+            System.exit(65);
         }
     }
 
@@ -64,5 +64,13 @@ public class Lox {
     private static void report(int line, String where, String message) {
         System.err.println("[line " + line + "] Error" + where + ": " + message);
         hadError = true;
+    }
+
+    static void error(Token token, String message) {
+        if (token.tokenType == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, "at '" + token.lexeme + "'", message);
+        }
     }
 }
