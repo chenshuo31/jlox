@@ -76,7 +76,7 @@ public class Scanner {
             case '/':
                 if (match('/')) {
                     // A comment goes until the end of line
-                    // TODO comment style like /* ... */(block comment)
+                    // 1. TODO comment style like /* ... */(block comment)
                     while (peek() != '\n' && !isAtEnd()) {
                         advance();
                     }

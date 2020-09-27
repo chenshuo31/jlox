@@ -48,6 +48,7 @@ public class Lox {
             if (line == null) {
                 break;
             }
+            // 6. REPL TODO support expressions and statements
             run(line);
             hadError = false;
         }
